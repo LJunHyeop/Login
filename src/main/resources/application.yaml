@@ -1,0 +1,88 @@
+spring:
+  config:
+#  optional : .env 파일이 없어도 컴파일 에러가 발생
+#   file : 파일을 improt하겠다
+#    .env 파일명
+    import: optional:file:.env
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: ${DEFAULT.DB_URL}
+    username: ${DEFAULT.DB_USERNAME}
+    password: ${DEFAULT.DB_PASSWORD}
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 30MB
+
+mybatis:
+  mapper-locations: mappers/**/*.xml
+
+springdoc:
+  api-docs:
+    version: openapi_3_1
+  swagger-ui:
+    path: /swagger
+    operations-sorter: method
+    default-model-expand-depth: 10
+    default-models-expand-depth: 10
+    display-request-duration: true
+  cache:
+    disabled: true
+
+file:
+  directory: ${DEFAULT.FILE_DIRECTORY}
+
+# custom 속성 지정
+app:
+  jwt:
+    # JWT만들 때 사용하는 열쇠(암호화) > 나중에 복호화 할때도 사용
+    #secret: DaeguGreenArtAcademyClass502RoomForJavaSpringBootFightingD23sdfsdf23FDSADFSDFDass502RoomForJavaSprinass502RoomForJavaSprin
+    secret: ${JWT_SECRET}
+
+    #front-back 간 JWT받는 헤더 키 이름
+    header-schema-name: authorization
+
+    #토큰의 종류: Bearer 는 JWT or OAuth(소셜로그인 때 사용)를 의미
+    token-type: Bearer
+
+    #AT - 만료시간(ms) - 30분
+    #access-token-expiry: 1_800_000
+    access-token-expiry: 30_000
+
+    #RT - 만료시간(ms) - 15일
+    refresh-token-expiry: 1_296_000_000
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: tdd
+  datasource:
+    url: ${TDD.DB_URL}
+  sql:
+    init:
+      mode: always
+
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${PROD.DB_URL}
+    username: ${PROD.DB_USERNAME}
+    password: ${PROD.DB_PASSWORD}
+
+file:
+  directory: ${PROD.FILE_DIRECTORY}
+
+
+
